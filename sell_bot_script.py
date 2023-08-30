@@ -10,6 +10,7 @@ import cv2
 import pytesseract
 import easyocr
 import re
+import os
 pytesseract.pytesseract.tesseract_cmd = r"C:\Users\TWIM\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
 
 
@@ -109,13 +110,13 @@ def sellSetup():
 
 
 def getRoubleValueFromScreenShot():
-    originalImage = cv2.imread('price.png')
+    originalImage = cv2.imread('images//price.png')
     grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
     (_, blackAndWhiteImage) = cv2.threshold(
         grayImage, 127, 255, cv2.THRESH_BINARY_INV)
     reader = easyocr.Reader(['en'], gpu=False)
     results = reader.readtext(blackAndWhiteImage)
-    cv2.imwrite("bnwprice.png", blackAndWhiteImage)
+    cv2.imwrite("images//bnwprice.png", blackAndWhiteImage)
 
     final_price = ""
     for i in results:
@@ -133,7 +134,8 @@ def getRoubleValueFromScreenShot():
 
 def takeScreenShotOfPrice():
     click(2442, 162)
-    im2 = pyautogui.screenshot('price.png', region=(1779, 210, 210, 45))
+    im2 = pyautogui.screenshot(
+        'images//price.png', region=(1779, 210, 210, 45))
 
 
 def sellSetup():
@@ -162,6 +164,7 @@ def setPriceAndSell(value, margin):
         margin = 500
     pyautogui.typewrite(str(value-margin), 0.2)
     print(f"Item put on market for {value} - {margin} :" + str(value - margin))
+    addSellToFile(recap, (value - margin))
     time.sleep(0.5)
     click(1290, 991)
 
