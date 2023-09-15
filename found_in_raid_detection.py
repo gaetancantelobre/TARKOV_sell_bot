@@ -83,4 +83,4 @@ def get_fir_pos_from_screen_shot(screen_shot, show_off=NO_SHOWOFF):
     return list_of_pos
 
 
-get_fir_pos_from_screen_shot('flea_market_example.png', SHOWOFF)
+# get_fir_pos_from_screen_shot('flea_market_example.png', SHOWOFF)

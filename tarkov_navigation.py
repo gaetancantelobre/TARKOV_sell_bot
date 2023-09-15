@@ -53,9 +53,9 @@ def find_current_tab():
     image = cv.imread('images//current_screen.png')
     gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     cv.imwrite('images//current_screen.png', gray_image)
-    time.sleep(1)
 
     for tab in tabs:  # tries all the different avaible menus
+        print(tab.get_img_file_path())
         if (look_for_pattern_in_image(tab.get_img_file_path(), 'images//current_screen.png')):
             return tab
     return -1
