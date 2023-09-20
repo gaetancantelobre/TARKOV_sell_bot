@@ -29,7 +29,7 @@ def click(pos):
 
 
 def go_to_tab(tab: Menu_tab) -> None:
-    click(tab.get_pos())
+    pyautogui.click(tab.get_pos()[0], tab.get_pos()[1])
     time.sleep(1)
 
 

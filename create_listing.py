@@ -1,4 +1,4 @@
-from tarkov_navigation import look_for_pattern_in_image, take_screenshot, SHOWOFF, NO_SHOWOFF
+from tarkov_navigation import *
 import pyautogui
 from found_in_raid_detection import get_fir_pos_from_screen_shot
 import time
@@ -10,6 +10,19 @@ import re
 RUB = 0
 EUR = 1
 USD = 2
+
+
+def checkOfferSlot():
+    pyautogui.click(2449, 160)
+    win32api.SetCursorPos((1750, 109))
+    time.sleep(1)
+    print(pyautogui.pixel(1750, 109))
+    if (pyautogui.pixel(1800, 109)[0] > 50):
+        pyautogui.click(1800, 109)
+        time.sleep(2)
+        return True
+    else:
+        return False
 
 
 class Listing:
@@ -69,16 +82,18 @@ class Listing:
             pyautogui.click(button_pos[0][0]+5, button_pos[0][1]+5)
 
     def find_container_screen(self):
+        time.sleep(1)
         window = look_for_pattern_in_image(
             'images//junkcase//mag.png', take_screenshot())
+
         if (len(window) < 1):
-            print("can find menu for opeing container")
+            print("can find menu for container")
             exit()
         return window
 
     def moveWindow(self, clickpos, targetpos):
         win32api.SetCursorPos(clickpos)
-        pyautogui.dragTo(targetpos[0], targetpos[1], duration=1)
+        pyautogui.dragTo(targetpos[0], targetpos[1], duration=0.5)
 
     def find_price_of_selected_item(self):
         pyautogui.click(self.refresh[0], self.refresh[1])
@@ -135,8 +150,13 @@ class Listing:
         self.find_scroll_drag_position()
         sell_case_loc = self.find_sell_logo()
         self.open_container(sell_case_loc)
-        self.moveWindow(self.find_container_screen()[0], (1, 1))
+        window_loc = self.find_container_screen()[0]
+        window_loc = (window_loc[0]+300, window_loc[1]+10)
+        self.moveWindow(window_loc, (1, 1))
         fir_pos = get_fir_pos_from_screen_shot(take_screenshot(), NO_SHOWOFF)
+        if (len(fir_pos) < 1):
+            print("case is empty")
+            return -1
         self.filter_by_item(fir_pos)
         self.find_price_of_selected_item()
         self.select_and_insert_price(fir_pos)
@@ -144,5 +164,16 @@ class Listing:
 
 print("qdzqzd")
 time.sleep(2)
-listing = Listing(RUB, True)
-listing.create_listing()
+# listing = Listing(RUB, True)
+# listing.create_listing()
+try:
+    while (keyboard.is_pressed('q') == False):
+        if (checkOfferSlot() == True):
+            listing = Listing(RUB, True)
+            if (listing.create_listing() == -1):
+                exit()
+        else:
+            time.sleep(2)
+
+except KeyboardInterrupt:
+    print("end")
