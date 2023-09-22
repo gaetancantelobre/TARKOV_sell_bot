@@ -97,7 +97,7 @@ class Listing:
 
     def find_price_of_selected_item(self):
         pyautogui.click(self.refresh[0], self.refresh[1])
-        time.sleep(1)
+        time.sleep(2)
         im2 = pyautogui.screenshot(
             'images//price.png', region=(1779, 210, 210, 45))
         originalImage = cv2.imread('images//price.png')
@@ -143,7 +143,12 @@ class Listing:
         pyautogui.typewrite(str(self.price-margin), 0.2)
         print(
             f"Item put on market for {self.price} - {margin} :" + str(self.price - margin))
-        pyautogui.click(self.add_offer[0], self.add_offer[1])
+        pos = look_for_pattern_in_image(
+            'images//listing//sell.png', take_screenshot(), NO_SHOWOFF)
+        if (len(pos) < 1):
+            print("couldnt find sell button in junkcase")
+            exit()
+        pyautogui.click(pos[0][0]-40, pos[0][1])
 
     def create_listing(self):
         self.toggle_auto_select()
